@@ -15,7 +15,7 @@ function ShipmentCard({ shipment, onDelete }) {
       alignItems: 'center'
     }}>
       <div>
-        <h4 style={{ margin: '0 0 5px 0' }}>{shipment.id} - {shipment.recipient}</h4>
+        <h4 style={{ margin: '0 0 5px 0', textAlign: 'left' }}>{shipment.id} - {shipment.recipient}</h4>
         <small style={{ color: '#94a3b8' }}>Status: {shipment.status} | Location: {shipment.location}</small>
       </div>
 
