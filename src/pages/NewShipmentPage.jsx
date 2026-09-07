@@ -1,90 +1,55 @@
-import React, { useState } from 'react';
+// src/pages/NewShipmentPage.jsx
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ShipmentContext } from '../context/ShipmentContext';
 
-export default function NewShipmentPage({ onAddShipment }) {
+export default function NewShipmentPage() {
+  const { addShipment } = useContext(ShipmentContext);
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
-    sender: '',
-    receiver: '',
-    destination: '',
-    status: 'In Transit'
-  });
+  const [recipient, setRecipient] = useState('');
+  const [location, setLocation] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.sender || !formData.receiver || !formData.destination) {
-      alert('ကျေးဇူးပြု၍ အချက်အလက်များ အားလုံး ဖြည့်စွက်ပါ');
-      return;
-    }
+    if (!recipient || !location) return;
 
     const newShipment = {
-      trackingId: `TRK-${Math.floor(1000 + Math.random() * 9000)}`, // Unique ID Auto generate လုပ်ခြင်း
-      ...formData,
-      date: new Date().toISOString().split('T')[0]
+      id: `TRK-${Math.floor(1000 + Math.random() * 9000)}`,
+      recipient,
+      status: 'In Transit',
+      location
     };
 
-    onAddShipment(newShipment);
-    alert(`ပါဆယ် တင်သွင်းမှု အောင်မြင်ပါသည်။ Tracking ID: ${newShipment.trackingId}`);
-    
-    // DashboardPage ဆီ ပြန်လည် ညွှန်းပို့ခြင်း
-    navigate('/');
+    addShipment(newShipment);
+    navigate('/'); // Dashboard သို့ Auto-redirect ပေးခြင်း
   };
 
   return (
-    <div style={{ maxWidth: '500px', margin: '0 auto', background: '#1e293b', padding: '25px', borderRadius: '8px', border: '1px solid #334155' }}>
-      <h2 style={{ marginTop: 0, color: '#38bdf8', marginBottom: '20px' }}>📦 New Shipment တင်သွင်းရန်</h2>
-
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+    <div>
+      <h2>📦 Add New Shipment</h2>
+      <form onSubmit={handleSubmit}>
         <div>
-          <label style={{ display: 'block', marginBottom: '5px', color: '#94a3b8' }}>ပေးပို့သူ အမည် (Sender):</label>
-          <input
-            type="text"
-            value={formData.sender}
-            onChange={(e) => setFormData({ ...formData, sender: e.target.value })}
-            style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #334155', background: '#0f172a', color: '#fff', boxSizing: 'border-box' }}
-            placeholder="ဥပမာ - ဦးဘ"
+          <label>Recipient Name: </label>
+          <input 
+            type="text" 
+            value={recipient} 
+            onChange={(e) => setRecipient(e.target.value)} 
+            required 
           />
         </div>
-
+        <br />
         <div>
-          <label style={{ display: 'block', marginBottom: '5px', color: '#94a3b8' }}>လက်ခံသူ အမည် (Receiver):</label>
-          <input
-            type="text"
-            value={formData.receiver}
-            onChange={(e) => setFormData({ ...formData, receiver: e.target.value })}
-            style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #334155', background: '#0f172a', color: '#fff', boxSizing: 'border-box' }}
-            placeholder="ဥပမာ - ဒေါ်မြ"
+          <label>Current Location: </label>
+          <input 
+            type="text" 
+            value={location} 
+            onChange={(e) => setLocation(e.target.value)} 
+            required 
           />
         </div>
-
-        <div>
-          <label style={{ display: 'block', marginBottom: '5px', color: '#94a3b8' }}>ရောက်ရှိမည့် မြို့/နေရာ (Destination):</label>
-          <input
-            type="text"
-            value={formData.destination}
-            onChange={(e) => setFormData({ ...formData, destination: e.target.value })}
-            style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #334155', background: '#0f172a', color: '#fff', boxSizing: 'border-box' }}
-            placeholder="ဥပမာ - မန္တလေး"
-          />
-        </div>
-
-        <button
-          type="submit"
-          style={{
-            padding: '12px',
-            background: '#38bdf8',
-            color: '#0f172a',
-            border: 'none',
-            borderRadius: '6px',
-            fontWeight: 'bold',
-            fontSize: '16px',
-            cursor: 'pointer',
-            marginTop: '10px'
-          }}
-        >
-          ➕ Shipment တင်မည်
-        </button>
+        <br />
+        <button type="submit">Create Order</button>
       </form>
     </div>
   );
