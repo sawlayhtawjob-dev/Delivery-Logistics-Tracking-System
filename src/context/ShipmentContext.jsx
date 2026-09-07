@@ -20,14 +20,19 @@ export function ShipmentProvider({ children }) {
     setShipments((prev) => [newShipment, ...prev]);
   };
 
+  const deleteShipment = (id) => {
+    setShipments((prev) => prev.filter((s) => s.id !== id));
+  };
+
   return (
-    <ShipmentContext.Provider value={{ shipments, addShipment }}>
+    // 💡 ဒီနေရာမှာ deleteShipment ကို value ထဲ ပေါင်းထည့်ပေးလိုက်ပါ
+    <ShipmentContext.Provider value={{ shipments, addShipment, deleteShipment }}>
       {children}
     </ShipmentContext.Provider>
   );
 }
 
-// 💡 Custom Hook ဖန်တီးခြင်း
+// 💡 Custom Hook
 export function useShipments() {
   const context = useContext(ShipmentContext);
   if (!context) {

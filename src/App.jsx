@@ -1,25 +1,28 @@
 // src/App.jsx
-import { Routes, Route, NavLink } from 'react-router-dom';
-import DashboardPage from './pages/DashboardPage';
-import NewShipmentPage from './pages/NewShipmentPage';
-import TrackingPage from './pages/TrackingPage';
+import React, { lazy, Suspense } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navbar';
+
+// Page များကို Lazy Load ပြုလုပ်ခြင်း (လိုအပ်မှသာ Network တွင် ခေါ်ယူမည်)
+const DashboardPage = lazy(() => import('./pages/DashboardPage'));
+const NewShipmentPage = lazy(() => import('./pages/NewShipmentPage'));
+const TrackingPage = lazy(() => import('./pages/TrackingPage'));
 
 export default function App() {
   return (
-    <div>
-      <nav style={{ display: 'flex', gap: '20px', padding: '15px', background: '#333', color: '#fff' }}>
-        <NavLink to="/" style={({ isActive }) => ({ color: isActive ? '#4caf50' : '#fff' })}>Dashboard</NavLink>
-        <NavLink to="/new" style={({ isActive }) => ({ color: isActive ? '#4caf50' : '#fff' })}>New Shipment</NavLink>
-        <NavLink to="/track" style={({ isActive }) => ({ color: isActive ? '#4caf50' : '#fff' })}>Track</NavLink>
-      </nav>
-
-      <div style={{ padding: '20px' }}>
-        <Routes>
-          <Route path="/" element={<DashboardPage />} />
-          <Route path="/new" element={<NewShipmentPage />} />
-          <Route path="/track" element={<TrackingPage />} />
-        </Routes>
-      </div>
+    <div style={{ background: '#0f172a', minHeight: '100vh', color: '#fff' }}>
+      <Navbar />
+      
+      <main style={{ padding: '20px', maxWidth: '1100px', margin: '0 auto' }}>
+        {/* Lazy Loaded Components များ ယူနေစဉ် Loading UI ပြသရန် Suspense ကို သုံးသည် */}
+        <Suspense fallback={<div style={{ textAlign: 'center', padding: '50px' }}>Loading page...</div>}>
+          <Routes>
+            <Route path="/" element={<DashboardPage />} />
+            <Route path="/new-shipment" element={<NewShipmentPage />} />
+            <Route path="/track" element={<TrackingPage />} />
+          </Routes>
+        </Suspense>
+      </main>
     </div>
   );
 }
